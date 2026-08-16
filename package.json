@@ -1,0 +1,26 @@
+{
+  "name": "cypress-orangehrm-sanbercode",
+  "version": "1.0.0",
+  "description": "Automated End-to-End Testing for OrangeHRM Login Feature using Cypress - SanberCode QA Automation",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run --spec cypress/e2e/login_orangehrm.cy.js",
+    "cypress:run:chrome": "cypress run --browser chrome --spec cypress/e2e/login_orangehrm.cy.js",
+    "cypress:run:headed": "cypress run --headed --spec cypress/e2e/login_orangehrm.cy.js",
+    "test": "npm run cypress:run"
+  },
+  "keywords": [
+    "cypress",
+    "quality-assurance",
+    "orangehrm",
+    "automation-testing",
+    "sanbercode",
+    "e2e-testing"
+  ],
+  "author": "Wiryawan Pranawadigda",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^15.20.1"
+  }
+}

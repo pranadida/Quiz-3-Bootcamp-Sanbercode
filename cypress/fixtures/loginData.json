@@ -1,0 +1,26 @@
+{
+  "validUser": {
+    "username": "Admin",
+    "password": "admin123"
+  },
+  "invalidUser": {
+    "username": "InvalidUser99",
+    "password": "WrongPassword99!"
+  },
+  "wrongPassword": {
+    "username": "Admin",
+    "password": "wrongpassword123"
+  },
+  "wrongUsername": {
+    "username": "WrongAdminName",
+    "password": "admin123"
+  },
+  "sqlInjection": {
+    "username": "' OR '1'='1",
+    "password": "' OR '1'='1"
+  },
+  "caseSensitive": {
+    "username": "ADMIN",
+    "password": "ADMIN123"
+  }
+}
