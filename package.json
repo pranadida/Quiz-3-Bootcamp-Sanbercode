@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run --spec cypress/e2e/login_orangehrm.cy.js",
-    "cypress:run:chrome": "cypress run --browser chrome --spec cypress/e2e/login_orangehrm.cy.js",
-    "cypress:run:headed": "cypress run --headed --spec cypress/e2e/login_orangehrm.cy.js",
-    "test": "npm run cypress:run"
+    "cypress:run": "cypress run",
+    "cypress:run:quiz3": "cypress run --spec cypress/e2e/login_orangehrm.cy.js",
+    "cypress:run:intercept": "cypress run --spec cypress/e2e/intercept/login_intercept.cy.js",
+    "cypress:run:chrome": "cypress run --browser chrome",
+    "cypress:run:headed": "cypress run --headed",
+    "test": "npm run cypress:run:intercept"
   },
   "keywords": [
     "cypress",

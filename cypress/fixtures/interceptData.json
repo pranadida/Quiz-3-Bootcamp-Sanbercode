@@ -1,0 +1,36 @@
+{
+  "mockShortcuts": {
+    "data": [
+      {
+        "id": 101,
+        "name": "Sanbercode Custom Leave List",
+        "url": "/web/index.php/leave/viewLeaveList"
+      },
+      {
+        "id": 102,
+        "name": "Sanbercode Mock Timesheet",
+        "url": "/web/index.php/time/viewEmployeeTimesheet"
+      }
+    ],
+    "meta": {
+      "total": 2
+    }
+  },
+  "mockActionSummary": {
+    "data": {
+      "leaveRequestsToApprove": 5,
+      "pendingLeaveRequests": 3,
+      "timesheetsToApprove": 2
+    }
+  },
+  "mockServerError": {
+    "error": "Internal Server Error",
+    "message": "The authentication service is temporarily unavailable (Mocked 500 Error)",
+    "code": 500
+  },
+  "mockRateLimit": {
+    "error": "Too Many Requests",
+    "message": "Rate limit exceeded. Please try again later. (Mocked 429 Error)",
+    "retryAfter": 60
+  }
+}
