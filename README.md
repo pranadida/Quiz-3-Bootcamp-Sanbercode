@@ -1,16 +1,20 @@
-# 🚀 OrangeHRM Login Automation Test Suite (Cypress)
+# 🚀 OrangeHRM & Platzi API Automation Test Suite (Cypress)
 
 > **SanberCode QA Automation Bootcamp**  
 > **Author:** Wiryawan Pranawadigda  
-> **Target Application:** [OrangeHRM Open Source Demo](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login)  
-> **Framework:** Cypress E2E with Page Object Model (POM) & Network Interception (`cy.intercept`)
+> **Target Applications:** 
+> 1. [OrangeHRM Open Source Demo](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login) (UI & Intercept Testing)
+> 2. [Platzi Fake Store Categories API](https://fakeapi.platzi.com/en/rest/categories) (REST API Testing)  
+> **Framework:** Cypress with Page Object Model (POM) & Service Object Pattern
 
 ---
 
 ## 📌 Project Overview
-Repository ini berisi otomatisasi pengujian *End-to-End (E2E)* untuk fitur **Autentikasi & Login OrangeHRM** menggunakan framework **Cypress**. Pengujian dirancang dengan arsitektur **Page Object Model (POM)** yang rapi, *data-driven testing* berbasis Fixtures JSON, serta mencakup:
-1. **Quiz 3 Login Suite (`login_orangehrm.cy.js`)**: 12 Test Cases (skenario positif, negatif, validasi form, keamanan, dan navigasi UI).
-2. **Intercept Suite (`intercept/login_intercept.cy.js`)**: 10 Test Cases menggunakan `cy.intercept()` untuk network spying, stubbing/mocking payload, throttling latency delay, fault injection (HTTP 500), query parameter inspection, dan header/status validation.
+Repository ini berisi kumpulan otomatisasi pengujian *End-to-End (E2E)* dan *REST API Testing* menggunakan framework **Cypress** dengan arsitektur **Page Object Model (POM)** dan *data-driven testing* berbasis Fixtures JSON:
+
+1. **Quiz 3 Login Suite (`cypress/e2e/login_orangehrm.cy.js`)**: 12 Test Cases (skenario positif, negatif, validasi form, keamanan, dan navigasi UI).
+2. **Intercept Suite (`cypress/e2e/intercept/login_intercept.cy.js`)**: 10 Test Cases menggunakan `cy.intercept()` untuk network spying, stubbing/mocking payload, latency throttling, fault injection (HTTP 500), query parameter inspection, dan header/status validation.
+3. **Platzi API Categories Suite (`cypress/e2e/api/categories_api.cy.js`)**: 13 Test Cases pengujian REST API pada endpoint Categories (`https://api.escuelajs.co/api/v1/categories`) meliputi Create, Read (All & By ID & By Query), Update, Delete, Filtering, Error Handling (HTTP 400 Bad Request / EntityNotFoundError), dan relasi produk dengan validasi minimal status code dan response body value.
 
 Seluruh test cases telah terverifikasi **100% Passed**.
 
@@ -23,14 +27,19 @@ cypress-orangehrm-sanbercode/
 ├── cypress/
 │   ├── e2e/
 │   │   ├── login_orangehrm.cy.js            # [Quiz 3] 12 E2E Test Cases Login UI & Validasi
-│   │   └── intercept/
-│   │       └── login_intercept.cy.js        # [Intercept Suite] 10 Test Cases cy.intercept Network Testing
+│   │   ├── intercept/
+│   │   │   └── login_intercept.cy.js        # [Intercept Suite] 10 Test Cases cy.intercept Network Testing
+│   │   └── api/
+│   │       └── categories_api.cy.js         # [API Suite] 13 Test Cases Platzi Fake Store Categories REST API
 │   ├── fixtures/
 │   │   ├── loginData.json                  # Dataset kredensial login (valid, invalid, SQL injection)
-│   │   └── interceptData.json              # Dataset mock response (shortcuts, server error 500, rate limit)
+│   │   ├── interceptData.json              # Dataset mock response (shortcuts, server error 500, rate limit)
+│   │   └── categoryData.json               # Dataset payload API (valid, updated, invalid empty, invalid URL)
 │   └── support/
 │       ├── pages/
 │       │   └── LoginPage.js                 # Page Object Model (POM) untuk halaman Login
+│       ├── api/
+│       │   └── CategoryAPI.js               # Service Object Model untuk REST API Categories
 │       ├── commands.js                      # Custom Cypress commands
 │       └── e2e.js                           # Konfigurasi exception handler & global setup
 ├── cypress.config.js                        # Konfigurasi timeout, baseUrl, dan viewport Cypress
@@ -38,6 +47,26 @@ cypress-orangehrm-sanbercode/
 ├── .gitignore                               # File exclusion untuk Git
 └── README.md                                # Dokumentasi lengkap proyek
 ```
+
+---
+
+## 🌐 Matriks Test Cases Platzi REST API Categories (`cypress/e2e/api/categories_api.cy.js`)
+
+| No | Test Case ID | HTTP Method | Endpoint | Skenario Pengujian & Asersi | Status Code | Status |
+| :-: | :--- | :---: | :--- | :--- | :-: | :-: |
+| **1** | `TC-01-API` | `GET` | `/categories` | Ambil semua kategori; validasi array length > 0, schema item (`id`, `name`, `image`, `creationAt`, `updatedAt`) | `200 OK` | **PASSED** |
+| **2** | `TC-02-API` | `GET` | `/categories?limit=3` | Query parameter limit; validasi response array memiliki panjang tepat 3 item | `200 OK` | **PASSED** |
+| **3** | `TC-03-API` | `GET` | `/categories/1` | Ambil single category by valid ID; validasi `id: 1`, `name` string, `image` valid URL | `200 OK` | **PASSED** |
+| **4** | `TC-04-API` | `GET` | `/categories/9999999` | Single category ID tidak terdaftar (Negative); validasi error `EntityNotFoundError` | `400 Bad Request` | **PASSED** |
+| **5** | `TC-05-API` | `GET` | `/categories/invalid-id-abc` | Single category ID non-numeric string (Negative); validasi message `numeric string is expected` | `400 Bad Request` | **PASSED** |
+| **6** | `TC-06-API` | `POST` | `/categories` | Create kategori baru dengan valid payload; validasi response `name`, `image`, timestamp, dan auto-generated `id` | `201 Created` | **PASSED** |
+| **7** | `TC-07-API` | `POST` | `/categories` | Create kategori payload kosong (Negative); validasi message `name should not be empty` & `image should not be empty` | `400 Bad Request` | **PASSED** |
+| **8** | `TC-08-API` | `POST` | `/categories` | Create kategori dengan format URL image salah (Negative); validasi message `image must be a URL address` | `400 Bad Request` | **PASSED** |
+| **9** | `TC-09-API` | `PUT` | `/categories/{id}` | Update data kategori eksis (nama & image); validasi data berhasil diperbarui sesuai payload | `200 OK` | **PASSED** |
+| **10** | `TC-10-API` | `PUT` | `/categories/9999999` | Update kategori ID tidak terdaftar (Negative); validasi error `EntityNotFoundError` | `400 Bad Request` | **PASSED** |
+| **11** | `TC-11-API` | `GET` | `/categories/1/products` | Ambil semua produk dalam kategori ID 1; validasi array produk dan `category.id: 1` | `200 OK` | **PASSED** |
+| **12** | `TC-12-API` | `DELETE` | `/categories/{id}` | Hapus kategori eksis; validasi response body bernilai `true` | `200 OK` | **PASSED** |
+| **13** | `TC-13-API` | `DELETE` | `/categories/9999999` | Hapus kategori ID tidak terdaftar (Negative); validasi error `EntityNotFoundError` | `400 Bad Request` | **PASSED** |
 
 ---
 
@@ -86,6 +115,11 @@ npm install
 
 ### 2. Menjalankan Test Suite
 
+* **Menjalankan Platzi Categories API Test Saja (13 Requests/Test Cases):**
+  ```bash
+  npm run cypress:run:api
+  ```
+
 * **Menjalankan Test Intercept Saja (10 Test Cases):**
   ```bash
   npm run cypress:run:intercept
@@ -96,7 +130,7 @@ npm install
   npm run cypress:run:quiz3
   ```
 
-* **Menjalankan Seluruh Test Suite Sekaligus (All 22 Test Cases):**
+* **Menjalankan Seluruh Test Suite Sekaligus (35 Test Cases):**
   ```bash
   npm run cypress:run
   ```

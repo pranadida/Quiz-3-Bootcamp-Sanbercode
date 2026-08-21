@@ -8,6 +8,7 @@
     "cypress:run": "cypress run",
     "cypress:run:quiz3": "cypress run --spec cypress/e2e/login_orangehrm.cy.js",
     "cypress:run:intercept": "cypress run --spec cypress/e2e/intercept/login_intercept.cy.js",
+    "cypress:run:api": "cypress run --spec cypress/e2e/api/categories_api.cy.js",
     "cypress:run:chrome": "cypress run --browser chrome",
     "cypress:run:headed": "cypress run --headed",
     "test": "npm run cypress:run:intercept"

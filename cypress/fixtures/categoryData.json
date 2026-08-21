@@ -1,0 +1,21 @@
+{
+  "validCategory": {
+    "name": "QA Cypress Gadgets",
+    "image": "https://i.imgur.com/QkIa5tT.jpeg"
+  },
+  "updatedCategory": {
+    "name": "QA Cypress Gadgets Updated",
+    "image": "https://i.imgur.com/ZANVnHE.jpeg"
+  },
+  "invalidCategoryEmpty": {
+    "name": "",
+    "image": ""
+  },
+  "invalidImageUrl": {
+    "name": "Invalid Image Category",
+    "image": "not-a-valid-url"
+  },
+  "nonExistentId": 9999999,
+  "invalidStringId": "invalid-id-abc",
+  "defaultCategoryId": 1
+}
