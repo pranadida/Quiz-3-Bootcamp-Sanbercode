@@ -22,5 +22,9 @@
   "caseSensitive": {
     "username": "ADMIN",
     "password": "ADMIN123"
+  },
+  "emptyUser": {
+    "username": "",
+    "password": ""
   }
 }

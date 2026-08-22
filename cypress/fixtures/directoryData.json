@@ -1,0 +1,65 @@
+{
+  "filterCriteria": {
+    "jobTitle": "Chief Financial Officer",
+    "jobTitlePartial": "Chief",
+    "location": "New York Sales Office",
+    "employeeName": "Peter Mac Anderson"
+  },
+  "mockDirectoryList": {
+    "data": [
+      {
+        "empNumber": 101,
+        "lastName": "Anderson",
+        "firstName": "Peter",
+        "middleName": "Mac",
+        "employeeId": "0001",
+        "jobTitle": {
+          "id": 1,
+          "title": "Chief Financial Officer",
+          "isDeleted": false
+        },
+        "location": {
+          "id": 1,
+          "name": "New York Sales Office"
+        },
+        "subunit": {
+          "id": 1,
+          "name": "Administration"
+        },
+        "workEmail": "peter.anderson@orangehrm.com",
+        "telephone": "+1 555-0199"
+      },
+      {
+        "empNumber": 102,
+        "lastName": "Pranawadigda",
+        "firstName": "Wiryawan",
+        "middleName": "Sanbercode",
+        "employeeId": "0002",
+        "jobTitle": {
+          "id": 2,
+          "title": "QA Automation Engineer",
+          "isDeleted": false
+        },
+        "location": {
+          "id": 2,
+          "name": "Jakarta QA Center"
+        },
+        "subunit": {
+          "id": 2,
+          "name": "Quality Assurance"
+        },
+        "workEmail": "wiryawan.qa@sanbercode.com",
+        "telephone": "+62 812-3456-7890"
+      }
+    ],
+    "meta": {
+      "total": 2
+    }
+  },
+  "mockEmptyDirectory": {
+    "data": [],
+    "meta": {
+      "total": 0
+    }
+  }
+}

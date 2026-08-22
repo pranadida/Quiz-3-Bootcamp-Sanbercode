@@ -1,0 +1,102 @@
+{
+  "validCandidate": {
+    "firstName": "Sanber",
+    "middleName": "QA",
+    "lastName": "Automation",
+    "vacancy": "Senior QA Lead",
+    "email": "sanber.qa@example.com",
+    "contactNumber": "081234567890",
+    "keywords": "cypress, testing, pom, qa",
+    "notes": "Experienced QA Automation candidate for Sanbercode project",
+    "consent": true
+  },
+  "invalidCandidate": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "invalid-email-format",
+    "contactNumber": "123456"
+  },
+  "emptyCandidate": {
+    "firstName": "",
+    "lastName": "",
+    "email": ""
+  },
+  "filterCriteria": {
+    "jobTitle": "QA Lead",
+    "status": "Shortlisted",
+    "candidateName": "John Doe"
+  },
+  "mockCandidatesList": {
+    "data": [
+      {
+        "id": 501,
+        "firstName": "Wiryawan",
+        "middleName": "Sanber",
+        "lastName": "Tester",
+        "email": "wiryawan.tester@example.com",
+        "contactNumber": "081299887766",
+        "dateOfApplication": "2026-08-22",
+        "status": {
+          "id": 1,
+          "label": "Shortlisted"
+        },
+        "vacancy": {
+          "id": 1,
+          "name": "Senior QA Lead"
+        },
+        "hiringManager": {
+          "id": 1,
+          "firstName": "Demo",
+          "lastName": "Manager"
+        }
+      },
+      {
+        "id": 502,
+        "firstName": "Sanbercode",
+        "middleName": "Batch",
+        "lastName": "Student",
+        "email": "student@sanbercode.com",
+        "contactNumber": "081122334455",
+        "dateOfApplication": "2026-08-22",
+        "status": {
+          "id": 2,
+          "label": "Application Initiated"
+        },
+        "vacancy": {
+          "id": 2,
+          "name": "Payroll Administrator"
+        },
+        "hiringManager": {
+          "id": 2,
+          "firstName": "HR",
+          "lastName": "Admin"
+        }
+      }
+    ],
+    "meta": {
+      "total": 2
+    }
+  },
+  "mockVacanciesList": {
+    "data": [
+      {
+        "id": 1,
+        "name": "Senior QA Lead",
+        "status": true,
+        "jobTitle": {
+          "id": 1,
+          "title": "QA Lead"
+        },
+        "hiringManager": {
+          "id": 1,
+          "firstName": "Demo",
+          "lastName": "Manager"
+        },
+        "numOfPositions": 2
+      }
+    ],
+    "meta": {
+      "total": 1
+    }
+  }
+}

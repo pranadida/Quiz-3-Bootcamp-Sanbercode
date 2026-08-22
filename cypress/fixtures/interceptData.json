@@ -25,7 +25,7 @@
   },
   "mockServerError": {
     "error": "Internal Server Error",
-    "message": "The authentication service is temporarily unavailable (Mocked 500 Error)",
+    "message": "The service is temporarily unavailable (Mocked 500 Error)",
     "code": 500
   },
   "mockRateLimit": {

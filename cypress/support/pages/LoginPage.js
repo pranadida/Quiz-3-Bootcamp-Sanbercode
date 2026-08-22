@@ -1,11 +1,7 @@
 class LoginPage {
-  // Navigation
-  visit() {
-    cy.visit('/web/index.php/auth/login');
-    cy.get('input[name="username"]').should('be.visible');
-  }
-
-  // Locators
+  // ==========================================
+  // LOCATORS / SELECTORS
+  // ==========================================
   get usernameInput() {
     return cy.get('input[name="username"]');
   }
@@ -50,7 +46,31 @@ class LoginPage {
     return cy.get('.oxd-form-row').eq(1).find('.oxd-input-field-error-message');
   }
 
-  // Action Methods
+  get dashboardBreadcrumb() {
+    return cy.get('.oxd-topbar-header-breadcrumb-module');
+  }
+
+  get userDropdown() {
+    return cy.get('.oxd-userdropdown-tab');
+  }
+
+  get resetPasswordTitle() {
+    return cy.get('.orangehrm-forgot-password-title');
+  }
+
+  get resetPasswordCancelBtn() {
+    return cy.get('.orangehrm-forgot-password-button--cancel');
+  }
+
+  // ==========================================
+  // ACTION METHODS
+  // ==========================================
+  visit() {
+    cy.visit('/web/index.php/auth/login');
+    this.usernameInput.should('be.visible');
+    return this;
+  }
+
   enterUsername(username) {
     if (username !== undefined && username !== null && username !== '') {
       this.usernameInput.clear().type(username);
@@ -70,15 +90,77 @@ class LoginPage {
     return this;
   }
 
+  submitLogin(username, password) {
+    if (username) this.enterUsername(username);
+    if (password) this.enterPassword(password);
+    this.clickLogin();
+    return this;
+  }
+
+  submitLoginWithEnterKey(username, password) {
+    this.enterUsername(username);
+    this.passwordInput.clear().type(`${password}{enter}`);
+    return this;
+  }
+
   clickForgotPassword() {
     this.forgotPasswordLink.click();
     return this;
   }
 
-  submitLogin(username, password) {
-    if (username) this.enterUsername(username);
-    if (password) this.enterPassword(password);
-    this.clickLogin();
+  cancelResetPassword() {
+    this.resetPasswordCancelBtn.should('be.visible').click();
+    return this;
+  }
+
+  // ==========================================
+  // ASSERTION METHODS
+  // ==========================================
+  assertDashboardLoaded() {
+    cy.url().should('include', '/dashboard/index');
+    this.dashboardBreadcrumb.should('be.visible').and('have.text', 'Dashboard');
+    this.userDropdown.should('be.visible');
+  }
+
+  assertAlertError(expectedMessage = 'Invalid credentials') {
+    this.alertError.should('be.visible').and('contain.text', expectedMessage);
+    cy.url().should('include', '/auth/login');
+  }
+
+  assertBothFieldsRequired() {
+    this.inputFieldErrors.should('have.length', 2);
+    this.getUsernameError().should('be.visible').and('have.text', 'Required');
+    this.getPasswordError().should('be.visible').and('have.text', 'Required');
+    cy.url().should('include', '/auth/login');
+  }
+
+  assertUsernameFieldRequired() {
+    this.getUsernameError().should('be.visible').and('have.text', 'Required');
+    cy.url().should('include', '/auth/login');
+  }
+
+  assertPasswordFieldRequired() {
+    this.getPasswordError().should('be.visible').and('have.text', 'Required');
+    cy.url().should('include', '/auth/login');
+  }
+
+  assertPasswordInputMasked() {
+    this.passwordInput.should('have.attr', 'type', 'password');
+    this.passwordInput.should('have.attr', 'placeholder', 'Password');
+  }
+
+  assertResetPasswordPage() {
+    cy.url().should('include', '/auth/requestPasswordResetCode');
+    this.resetPasswordTitle.should('be.visible').and('have.text', 'Reset Password');
+  }
+
+  assertLoginPageElementsVisible() {
+    this.companyLogo.should('be.visible');
+    this.loginTitle.should('be.visible').and('have.text', 'Login');
+    this.usernameInput.should('be.visible');
+    this.passwordInput.should('be.visible');
+    this.loginButton.should('be.visible').and('be.enabled');
+    this.demoCredentialsBox.should('be.visible').and('contain.text', 'Username : Admin');
   }
 }
 

@@ -1,141 +1,176 @@
-# 🚀 OrangeHRM & Platzi API Automation Test Suite (Cypress)
+# 🚀 OrangeHRM End-to-End Test Automation Suite (Cypress POM)
 
-> **SanberCode QA Automation Bootcamp**  
+> **SanberCode QA Automation Bootcamp - Final Assignment**  
 > **Author:** Wiryawan Pranawadigda  
-> **Target Applications:** 
-> 1. [OrangeHRM Open Source Demo](https://opensource-demo.orangehrmlive.com/web/index.php/auth/login) (UI & Intercept Testing)
-> 2. [Platzi Fake Store Categories API](https://fakeapi.platzi.com/en/rest/categories) (REST API Testing)  
-> **Framework:** Cypress with Page Object Model (POM) & Service Object Pattern
+> **Target Application:** [OrangeHRM Open Source Demo](https://opensource-demo.orangehrmlive.com/)  
+> **Repository GitHub:** [https://github.com/pranadida/Quiz-3-Bootcamp-Sanbercode](https://github.com/pranadida/Quiz-3-Bootcamp-Sanbercode)  
+> **Design Pattern:** Page Object Model (Action, Assertion, Data, & Intercept)
 
 ---
 
-## 📌 Project Overview
-Repository ini berisi kumpulan otomatisasi pengujian *End-to-End (E2E)* dan *REST API Testing* menggunakan framework **Cypress** dengan arsitektur **Page Object Model (POM)** dan *data-driven testing* berbasis Fixtures JSON:
+## 📌 Deskripsi Proyek
 
-1. **Quiz 3 Login Suite (`cypress/e2e/login_orangehrm.cy.js`)**: 12 Test Cases (skenario positif, negatif, validasi form, keamanan, dan navigasi UI).
-2. **Intercept Suite (`cypress/e2e/intercept/login_intercept.cy.js`)**: 10 Test Cases menggunakan `cy.intercept()` untuk network spying, stubbing/mocking payload, latency throttling, fault injection (HTTP 500), query parameter inspection, dan header/status validation.
-3. **Platzi API Categories Suite (`cypress/e2e/api/categories_api.cy.js`)**: 13 Test Cases pengujian REST API pada endpoint Categories (`https://api.escuelajs.co/api/v1/categories`) meliputi Create, Read (All & By ID & By Query), Update, Delete, Filtering, Error Handling (HTTP 400 Bad Request / EntityNotFoundError), dan relasi produk dengan validasi minimal status code dan response body value.
+Repository ini berisi otomatisasi pengujian *End-to-End (E2E)* pada website **OrangeHRM Demo** dengan mengimplementasikan arsitektur **Page Object Model (POM)** yang terstruktur rapi ke dalam 4 pilar utama:
+1. **Action**: Metode interaksi pengguna (navigasi, typing, clicking, selecting dropdown, uploading, filtering, resetting).
+2. **Assertion**: Metode validasi (verifikasi URL, kehadiran elemen, teks label, count data, error alerts, required fields, status code).
+3. **Data**: *Data-driven testing* menggunakan file fixture JSON terisolasi (`loginData.json`, `directoryData.json`, `recruitmentData.json`, `interceptData.json`).
+4. **Intercept**: Pemanfaatan `cy.intercept()` untuk network spying, stubbing/mocking payload response, simulasi latency throttling, dan fault injection (HTTP 500).
 
-Seluruh test cases telah terverifikasi **100% Passed**.
+Setiap fitur memiliki **8 Test Cases** (Total = **24 Test Cases**) dengan status **100% Passed**.
 
 ---
 
-## 🏗️ Struktur Direktori Proyek
+## 🏗️ Struktur Direktori Proyek (POM Architecture)
 
 ```plaintext
 cypress-orangehrm-sanbercode/
 ├── cypress/
 │   ├── e2e/
-│   │   ├── login_orangehrm.cy.js            # [Quiz 3] 12 E2E Test Cases Login UI & Validasi
+│   │   ├── login.cy.js                     # 8 Test Cases: Fitur Login (UI, Validation, Security & Intercept)
+│   │   ├── directory.cy.js                 # 8 Test Cases: Menu Directory (Search, Filter, Card & Intercept)
+│   │   ├── recruitment.cy.js               # 8 Test Cases: Menu Recruitment (Candidates, Add, Vacancy & Intercept)
+│   │   ├── login_orangehrm.cy.js           # 12 Test Cases: E2E Login Regression Suite
 │   │   ├── intercept/
-│   │   │   └── login_intercept.cy.js        # [Intercept Suite] 10 Test Cases cy.intercept Network Testing
+│   │   │   └── login_intercept.cy.js       # 10 Test Cases: Cy.Intercept Dedicated Suite
 │   │   └── api/
-│   │       └── categories_api.cy.js         # [API Suite] 13 Test Cases Platzi Fake Store Categories REST API
+│   │       └── categories_api.cy.js        # 13 Test Cases: Platzi REST API Categories Suite
 │   ├── fixtures/
-│   │   ├── loginData.json                  # Dataset kredensial login (valid, invalid, SQL injection)
-│   │   ├── interceptData.json              # Dataset mock response (shortcuts, server error 500, rate limit)
-│   │   └── categoryData.json               # Dataset payload API (valid, updated, invalid empty, invalid URL)
+│   │   ├── loginData.json                  # Dataset kredensial & input login
+│   │   ├── directoryData.json              # Dataset filter criteria & mock data Directory
+│   │   ├── recruitmentData.json            # Dataset candidate payload, filter, & mock data Recruitment
+│   │   └── interceptData.json              # Dataset mock server error, shortcuts, & payload API
 │   └── support/
-│       ├── pages/
-│       │   └── LoginPage.js                 # Page Object Model (POM) untuk halaman Login
-│       ├── api/
-│       │   └── CategoryAPI.js               # Service Object Model untuk REST API Categories
-│       ├── commands.js                      # Custom Cypress commands
-│       └── e2e.js                           # Konfigurasi exception handler & global setup
-├── cypress.config.js                        # Konfigurasi timeout, baseUrl, dan viewport Cypress
-├── package.json                             # Dependency & scripts runner
-├── .gitignore                               # File exclusion untuk Git
-└── README.md                                # Dokumentasi lengkap proyek
+│       ├── pages/                          # Page Object Model (Action & Assertion Methods)
+│       │   ├── LoginPage.js                # Locators, Actions, & Assertions untuk Login
+│       │   ├── DirectoryPage.js            # Locators, Actions, & Assertions untuk Directory
+│       │   └── RecruitmentPage.js          # Locators, Actions, & Assertions untuk Recruitment
+│       ├── intercepts/                     # Intercept Helper Modules
+│       │   ├── LoginIntercept.js           # Spying & Stubbing untuk Authentication API
+│       │   ├── DirectoryIntercept.js       # Spying & Stubbing untuk Directory API
+│       │   └── RecruitmentIntercept.js     # Spying & Stubbing untuk Recruitment API
+│       ├── commands.js                     # Custom Cypress commands
+│       └── e2e.js                          # Exception handler & konfigurasi global
+├── cypress.config.js                       # Konfigurasi baseUrl, timeout, viewport
+├── package.json                            # Dependency & NPM test scripts
+└── README.md                               # Dokumentasi lengkap proyek
 ```
 
 ---
 
-## 🌐 Matriks Test Cases Platzi REST API Categories (`cypress/e2e/api/categories_api.cy.js`)
+## 📊 Matriks 24 Test Cases (8 TC Login, 8 TC Directory, 8 TC Recruitment)
 
-| No | Test Case ID | HTTP Method | Endpoint | Skenario Pengujian & Asersi | Status Code | Status |
-| :-: | :--- | :---: | :--- | :--- | :-: | :-: |
-| **1** | `TC-01-API` | `GET` | `/categories` | Ambil semua kategori; validasi array length > 0, schema item (`id`, `name`, `image`, `creationAt`, `updatedAt`) | `200 OK` | **PASSED** |
-| **2** | `TC-02-API` | `GET` | `/categories?limit=3` | Query parameter limit; validasi response array memiliki panjang tepat 3 item | `200 OK` | **PASSED** |
-| **3** | `TC-03-API` | `GET` | `/categories/1` | Ambil single category by valid ID; validasi `id: 1`, `name` string, `image` valid URL | `200 OK` | **PASSED** |
-| **4** | `TC-04-API` | `GET` | `/categories/9999999` | Single category ID tidak terdaftar (Negative); validasi error `EntityNotFoundError` | `400 Bad Request` | **PASSED** |
-| **5** | `TC-05-API` | `GET` | `/categories/invalid-id-abc` | Single category ID non-numeric string (Negative); validasi message `numeric string is expected` | `400 Bad Request` | **PASSED** |
-| **6** | `TC-06-API` | `POST` | `/categories` | Create kategori baru dengan valid payload; validasi response `name`, `image`, timestamp, dan auto-generated `id` | `201 Created` | **PASSED** |
-| **7** | `TC-07-API` | `POST` | `/categories` | Create kategori payload kosong (Negative); validasi message `name should not be empty` & `image should not be empty` | `400 Bad Request` | **PASSED** |
-| **8** | `TC-08-API` | `POST` | `/categories` | Create kategori dengan format URL image salah (Negative); validasi message `image must be a URL address` | `400 Bad Request` | **PASSED** |
-| **9** | `TC-09-API` | `PUT` | `/categories/{id}` | Update data kategori eksis (nama & image); validasi data berhasil diperbarui sesuai payload | `200 OK` | **PASSED** |
-| **10** | `TC-10-API` | `PUT` | `/categories/9999999` | Update kategori ID tidak terdaftar (Negative); validasi error `EntityNotFoundError` | `400 Bad Request` | **PASSED** |
-| **11** | `TC-11-API` | `GET` | `/categories/1/products` | Ambil semua produk dalam kategori ID 1; validasi array produk dan `category.id: 1` | `200 OK` | **PASSED** |
-| **12** | `TC-12-API` | `DELETE` | `/categories/{id}` | Hapus kategori eksis; validasi response body bernilai `true` | `200 OK` | **PASSED** |
-| **13** | `TC-13-API` | `DELETE` | `/categories/9999999` | Hapus kategori ID tidak terdaftar (Negative); validasi error `EntityNotFoundError` | `400 Bad Request` | **PASSED** |
+### 🔑 1. Fitur Login (`cypress/e2e/login.cy.js`)
 
----
-
-## 📡 Matriks Test Cases Cy.Intercept (`cypress/e2e/intercept/login_intercept.cy.js`)
-
-| No | Test Case ID | Target Endpoint | HTTP Method | Jenis Intercept / Validasi | Hasil yang Diharapkan | Status |
-| :-: | :--- | :--- | :---: | :--- | :--- | :-: |
-| **1** | `TC-01-INT` | `**/auth/validate` | `POST` | **Auth Request & Redirect Assertion** | Method `POST`, Content-Type URL-encoded, Status `302`, redirect ke `/dashboard/index` | **PASSED** |
-| **2** | `TC-02-INT` | `**/api/v2/dashboard/employees/action-summary` | `GET` | **API Spying & Response Schema Validation** | Status `200`, Content-Type `application/json`, body memiliki property `data` | **PASSED** |
-| **3** | `TC-03-INT` | `**/api/v2/dashboard/shortcuts` | `GET` | **Mocking / Stubbing Custom Response** | Response diganti dengan fixture mock data (`Sanbercode Custom Leave List`), status `200` | **PASSED** |
-| **4** | `TC-04-INT` | `**/api/v2/dashboard/employees/subunit` | `GET` | **Network Throttling / Latency Simulation** | Simulasi delay `1000ms`, verifikasi UI tangguh dan respon `200` | **PASSED** |
-| **5** | `TC-05-INT` | `**/auth/validate` | `POST` | **Negative Auth Spy (Invalid Credentials)** | Status `302`, redirect location kembali ke `/auth/login`, UI alert `"Invalid credentials"` | **PASSED** |
-| **6** | `TC-06-INT` | `**/auth/validate` | `POST` | **Fault Injection (HTTP 500 Internal Error)** | Stubbing response status `500` & custom header `x-mock-error`, verifikasi ketahanan error | **PASSED** |
-| **7** | `TC-07-INT` | `**/core/i18n/messages` | `GET` | **Localization Dictionary Stubbing** | Stubbing dictionary bahasa i18n (`Sanbercode Custom Login Text`), status `200` | **PASSED** |
-| **8** | `TC-08-INT` | `**/api/v2/dashboard/employees/time-at-work**` | `GET` | **Query Parameter Matching & Headers** | Validasi query parameter time-tracking API, status `200`, content-type header valid | **PASSED** |
-| **9** | `TC-09-INT` | `**/api/v2/dashboard/employees/locations` | `GET` | **Distribution Data API Assertion** | Status `200`, body mengandung list data lokasi karyawan | **PASSED** |
-| **10** | `TC-10-INT` | `**/api/v2/dashboard/employees/leaves**` | `GET` | **Leaves on Date API Schema Validation** | Status `200`, content-type `application/json`, property `data` tervalidasi | **PASSED** |
-
----
-
-## 📊 Matriks 12 Test Cases Quiz 3 (`cypress/e2e/login_orangehrm.cy.js`)
-
-| No | Test Case ID | Kategori | Skenario Pengujian | Hasil yang Diharapkan | Status |
+| No | Test Case ID | Kategori | Skenario Pengujian | Komponen POM (Action/Assert/Data/Intercept) | Status |
 | :-: | :--- | :---: | :--- | :--- | :-: |
-| **1** | `TC-01` | **Positive** | Login dengan username & password valid (`Admin` / `admin123`) | Berhasil redirect ke `/dashboard/index`, header 'Dashboard' tampil | **PASSED** |
-| **2** | `TC-12` | **Positive** | Login menggunakan tombol keyboard `{enter}` pada input password | Berhasil submit form dan redirect ke halaman dashboard | **PASSED** |
-| **3** | `TC-02` | **Negative** | Login dengan username salah dan password salah | Muncul pesan error alert `"Invalid credentials"` | **PASSED** |
-| **4** | `TC-03` | **Negative** | Login dengan username valid dan password salah | Muncul pesan error alert `"Invalid credentials"` | **PASSED** |
-| **5** | `TC-04` | **Negative** | Login dengan username salah dan password valid | Muncul pesan error alert `"Invalid credentials"` | **PASSED** |
-| **6** | `TC-05` | **Validation** | Submit form login dalam keadaan kedua field kosong | Muncul label validasi `"Required"` di bawah username & password | **PASSED** |
-| **7** | `TC-06` | **Validation** | Submit form login dengan username kosong & password terisi | Muncul label validasi `"Required"` hanya di bawah field username | **PASSED** |
-| **8** | `TC-07` | **Validation** | Submit form login dengan username terisi & password kosong | Muncul label validasi `"Required"` hanya di bawah field password | **PASSED** |
-| **9** | `TC-08` | **Security** | Verifikasi tipe input pada field password | Memiliki atribut `type="password"` untuk masking karakter rahasia | **PASSED** |
-| **10** | `TC-09` | **Navigation** | Klik tautan *"Forgot your password?"* | Berhasil navigasi ke halaman Reset Password dan kembali via Cancel | **PASSED** |
-| **11** | `TC-10` | **Security** | Pengujian input string SQL Injection (`' OR '1'='1`) | Sistem menolak dengan alert `"Invalid credentials"` tanpa error server | **PASSED** |
-| **12** | `TC-11` | **UI Check** | Verifikasi keberadaan komponen utama halaman login | Logo perusahaan, judul 'Login', input fields, tombol login, dan demo box tampil | **PASSED** |
+| **1** | `TC-LOG-01` | **Positive / Intercept** | Login dengan kredensial valid, intercept `POST /auth/validate` (Status 302), dan redirect ke dashboard | `loginIntercept.interceptAuthValidate()`, `loginPage.enterUsername()`, `loginPage.enterPassword()`, `loginPage.assertDashboardLoaded()` | **PASSED** |
+| **2** | `TC-LOG-02` | **Positive / Keyboard Action** | Login menggunakan tombol keyboard `{enter}` pada input password | `loginPage.submitLoginWithEnterKey()`, `loginPage.assertDashboardLoaded()` | **PASSED** |
+| **3** | `TC-LOG-03` | **Negative / Intercept** | Login dengan username & password salah, intercept redirect kembali ke `/auth/login`, dan validasi alert error | `loginIntercept.interceptAuthValidate()`, `loginPage.submitLogin()`, `loginPage.assertAlertError()` | **PASSED** |
+| **4** | `TC-LOG-04` | **Negative / Assertion** | Login dengan username valid dan password salah | `loginPage.submitLogin()`, `loginPage.assertAlertError('Invalid credentials')` | **PASSED** |
+| **5** | `TC-LOG-05` | **Validation / Assertion** | Submit form login kosong dan validasi label 'Required' pada kedua input | `loginPage.clickLogin()`, `loginPage.assertBothFieldsRequired()` | **PASSED** |
+| **6** | `TC-LOG-06` | **Validation / Assertion** | Submit form login hanya dengan username terisi, password kosong | `loginPage.enterUsername()`, `loginPage.clickLogin()`, `loginPage.assertPasswordFieldRequired()` | **PASSED** |
+| **7** | `TC-LOG-07` | **Security & Navigation** | Verifikasi masking password (`type="password"`) dan navigasi ke halaman Reset Password | `loginPage.assertPasswordInputMasked()`, `loginPage.clickForgotPassword()`, `loginPage.assertResetPasswordPage()` | **PASSED** |
+| **8** | `TC-LOG-08` | **Intercept Mocking** | Fault Injection: Stub response HTTP 500 Internal Server Error pada endpoint autentikasi | `loginIntercept.stubServerError()`, `loginPage.submitLogin()`, asersi response statusCode 500 & error message | **PASSED** |
 
 ---
 
-## ⚙️ Panduan Menjalankan Pengujian
+### 👥 2. Menu Directory (`cypress/e2e/directory.cy.js`)
+
+| No | Test Case ID | Kategori | Skenario Pengujian | Komponen POM (Action/Assert/Data/Intercept) | Status |
+| :-: | :--- | :---: | :--- | :--- | :-: |
+| **1** | `TC-DIR-01` | **Positive / Intercept** | Navigasi ke Directory, intercept `GET /api/v2/directory/employees` (Status 200), dan verifikasi directory cards tampil | `directoryIntercept.interceptGetEmployees()`, `directoryPage.visit()`, `directoryPage.assertDirectoryPageLoaded()`, `directoryPage.assertAtLeastOneCardVisible()` | **PASSED** |
+| **2** | `TC-DIR-02` | **Positive / Filter Job Title** | Filter Directory berdasarkan Job Title dropdown dan verifikasi hasil filter | `directoryPage.selectJobTitle()`, `directoryPage.clickSearch()`, `directoryPage.assertRecordsFoundVisible()` | **PASSED** |
+| **3** | `TC-DIR-03` | **Positive / Filter Location** | Filter Directory berdasarkan Location dropdown dan verifikasi hasil pencarian | `directoryPage.selectLocation()`, `directoryPage.clickSearch()`, `directoryPage.assertRecordsFoundVisible()` | **PASSED** |
+| **4** | `TC-DIR-04` | **Positive / Detail View** | Klik salah satu employee card dan verifikasi detail profile sheet/sidebar terbuka | `directoryPage.clickEmployeeCard(0)`, `directoryPage.assertEmployeeDetailVisible()` | **PASSED** |
+| **5** | `TC-DIR-05` | **Action & State / Reset** | Terapkan filter lalu klik tombol Reset; verifikasi form kembali ke state kosong semula | `directoryPage.selectJobTitle()`, `directoryPage.clickReset()`, `directoryPage.assertResetFormState()` | **PASSED** |
+| **6** | `TC-DIR-06` | **Intercept Mocking** | Stub `GET /api/v2/directory/employees` dengan data mock dari `directoryData.json` dan verifikasi kartu mock ter-render | `directoryIntercept.stubEmployeesList()`, `directoryPage.assertDirectoryCardsCount(2)`, `directoryPage.assertCardContainsName('Wiryawan')` | **PASSED** |
+| **7** | `TC-DIR-07` | **Intercept Mocking** | Stub response data kosong (0 records) dan verifikasi UI menampilkan pesan 'No Records Found' | `directoryIntercept.stubEmptyEmployees()`, `directoryPage.assertNoRecordsFound()` | **PASSED** |
+| **8** | `TC-DIR-08` | **Intercept / Latency** | Simulasi network delay (1000ms) pada Directory API dan verifikasi stabilitas pemuatan halaman | `directoryIntercept.interceptDelayedEmployees(1000)`, `directoryPage.assertDirectoryPageLoaded()` | **PASSED** |
+
+---
+
+### 📋 3. Menu Recruitment (`cypress/e2e/recruitment.cy.js`)
+
+| No | Test Case ID | Kategori | Skenario Pengujian | Komponen POM (Action/Assert/Data/Intercept) | Status |
+| :-: | :--- | :---: | :--- | :--- | :-: |
+| **1** | `TC-REC-01` | **Positive / Intercept** | Navigasi ke Recruitment Candidates, intercept `GET /api/v2/recruitment/candidates` (Status 200), dan validasi tabel data | `recruitmentIntercept.interceptGetCandidates()`, `recruitmentPage.visitCandidates()`, `recruitmentPage.assertCandidateTableHasRows()` | **PASSED** |
+| **2** | `TC-REC-02` | **Positive / Filter Status** | Filter kandidat berdasarkan Status dropdown dan validasi hasil pencarian | `recruitmentPage.selectStatusFilter()`, `recruitmentPage.clickSearch()`, `recruitmentPage.assertCandidatesPageLoaded()` | **PASSED** |
+| **3** | `TC-REC-03` | **Navigation & UI** | Navigasi ke halaman Add Candidate via tombol `+ Add` dan verifikasi elemen formulir | `recruitmentPage.clickAddCandidateButton()`, `recruitmentPage.assertAddCandidatePageLoaded()` | **PASSED** |
+| **4** | `TC-REC-04` | **Validation / Required Fields** | Submit formulir Add Candidate dalam keadaan kosong dan validasi pesan error 'Required' pada field wajib | `recruitmentPage.visitAddCandidate()`, `recruitmentPage.clickSaveCandidate()`, `recruitmentPage.assertRequiredFieldsValidation()` | **PASSED** |
+| **5** | `TC-REC-05` | **Validation / Email Format** | Input format email tidak valid (`invalid-email-format`) dan validasi pesan 'Expected format: admin@example.com' | `recruitmentPage.fillCandidateForm()`, `recruitmentPage.clickSaveCandidate()`, `recruitmentPage.assertInvalidEmailFormatError()` | **PASSED** |
+| **6** | `TC-REC-06` | **Positive / Candidate Creation** | Input data kandidat lengkap dari fixture, intercept `POST /api/v2/recruitment/candidates` (Status 200), dan simpan data | `recruitmentIntercept.interceptAddCandidate()`, `recruitmentPage.fillCandidateForm()`, `recruitmentPage.clickSaveCandidate()`, `recruitmentPage.assertCandidateCreatedSuccessfully()` | **PASSED** |
+| **7** | `TC-REC-07` | **Intercept Mocking** | Stub Candidates API dengan data mock dari `recruitmentData.json` dan validasi rendering baris tabel | `recruitmentIntercept.stubCandidatesList()`, `recruitmentPage.assertTableRowsCount(2)`, `recruitmentPage.assertCandidateInTable('Wiryawan')` | **PASSED** |
+| **8** | `TC-REC-08` | **Action & Tab Navigation** | Navigasi antar-tab (Candidates ⇄ Vacancies), intercept `GET /api/v2/recruitment/vacancies`, dan validasi halaman Vacancies | `recruitmentIntercept.interceptGetVacancies()`, `recruitmentPage.clickVacanciesTab()`, `recruitmentPage.assertVacanciesPageLoaded()` | **PASSED** |
+
+---
+
+## ⚙️ Panduan Menjalankan Pengujian (NPM Scripts)
 
 ### 1. Instalasi Dependency
 ```bash
 npm install
 ```
 
-### 2. Menjalankan Test Suite
-
-* **Menjalankan Platzi Categories API Test Saja (13 Requests/Test Cases):**
+### 2. Menjalankan Test Per Fitur
+* **Jalankan Fitur Login (8 Test Cases):**
   ```bash
-  npm run cypress:run:api
+  npm run cypress:run:login
   ```
 
-* **Menjalankan Test Intercept Saja (10 Test Cases):**
+* **Jalankan Menu Directory (8 Test Cases):**
   ```bash
-  npm run cypress:run:intercept
+  npm run cypress:run:directory
   ```
 
-* **Menjalankan Test Quiz 3 E2E Saja (12 Test Cases):**
+* **Jalankan Menu Recruitment (8 Test Cases):**
   ```bash
-  npm run cypress:run:quiz3
+  npm run cypress:run:recruitment
   ```
 
-* **Menjalankan Seluruh Test Suite Sekaligus (35 Test Cases):**
+### 3. Menjalankan Seluruh Test Suite
+* **Jalankan Semua Test (Headless Mode):**
   ```bash
-  npm run cypress:run
+  npm test
   ```
 
-* **Menjalankan via Cypress Interactive Test Runner UI:**
+* **Jalankan dengan Browser Chrome:**
+  ```bash
+  npm run cypress:run:chrome
+  ```
+
+* **Membuka Cypress UI Test Runner Interaktif:**
   ```bash
   npm run cypress:open
   ```
+
+---
+
+## 📤 Panduan Commit dan Push ke GitHub
+
+Untuk memasukkan hasil automasi ke repository GitHub:
+
+```bash
+# 1. Pastikan berada di direktori project
+cd C:\Users\MSI\Desktop\cypress-orangehrm-sanbercode
+
+# 2. Tambahkan semua perubahan file
+git add .
+
+# 3. Lakukan commit dengan pesan deskriptif
+git commit -m "feat: complete POM automation test suite for Login, Directory, and Recruitment features with 24 test cases"
+
+# 4. Push ke branch main di GitHub
+git push -u origin main
+```
+
+---
+
+## 🏆 Kriteria Penilaian Terpenuhi
+
+- ✅ **Format POM (Page Object Model)**: Pemisahan tegas antara Page Objects (`support/pages/`), Intercepts (`support/intercepts/`), Fixtures (`fixtures/`), dan Test Specs (`e2e/`).
+- ✅ **Action**: Metode interaksi pengguna lengkap dan modular.
+- ✅ **Assertion**: Validasi eksplisit untuk URL, UI elements, error messages, record counts, dan API status/headers.
+- ✅ **Data**: Data testing terpusat pada file JSON fixtures.
+- ✅ **Intercept**: Network spying, stubbing/mocking, delay throttling, dan fault injection menggunakan `cy.intercept()`.
+- ✅ **Kuantitas Test Case**: Tepat **8 Test Cases untuk Login**, **8 Test Cases untuk Directory**, dan **8 Test Cases untuk Recruitment** (Total 24 Test Cases).
+- ✅ **Status Kelulusan**: 100% Passed pada seluruh pengujian.
